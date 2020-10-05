@@ -1,9 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const es6Renderer = require('express-es6-template-engine');
 
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+app.engine('html', es6Renderer); // use es6renderer for html view templates
+app.set('views', 'templates'); // look in the 'templates' folder for view templates
+app.set('view engine', 'html'); // set the view engine to use the 'html' views
 
 app.use(express.static('./public'));
 
@@ -13,6 +18,71 @@ let todoList = [
     todo: 'Implement a REST API',
   },
 ];
+
+
+// homepage route
+app.get('/', (req, res) => {
+  const name = req.query.name || 'World';
+  
+  res.render('home', {
+    locals: {
+      name: name,
+      title: 'Home'
+    },
+    partials: {
+      head: 'partials/head'
+    }
+  });
+})
+
+// GET request to the /todos route
+app.get('/todos', (req, res) => {
+  res.render('todos', { // use the templates/todos.html file
+    locals: {
+      todos: todoList, // make the 'data' variable available to the template as 'todos'
+      title: 'Todos', // pass the 'Friends' string as 'title'
+      message: null
+    },
+    partials: {
+      head: 'partials/head'
+    }
+  })
+})
+
+app.post('/todos', (req, res) => {
+  if (!req.body || !req.body.todo) {
+    res.status(400).render('todos', { // use the templates/todos.html file
+      locals: {
+        todos: todoList, // make the 'data' variable available to the template as 'todos'
+        title: 'Todos', // pass the 'Friends' string as 'title'
+        message: 'Please Enter Todo Text'
+      },
+      partials: {
+        head: 'partials/head'
+      }
+    })
+    return;
+  }
+  const prevId = todoList.reduce((prev, curr) => {
+    return prev > curr.id ? prev : curr.id;
+  }, 0);
+  const newTodo = {
+    id: prevId + 1,
+    todo: req.body.todo,
+  };
+  todoList.push(newTodo);
+
+  res.status(201).render('todos', { // use the templates/todos.html file
+    locals: {
+      todos: todoList, // make the 'data' variable available to the template as 'todos'
+      title: 'Todos', // pass the 'Friends' string as 'title'
+      message: 'New Todo Added'
+    },
+    partials: {
+      head: 'partials/head'
+    }
+  })
+})
 
 // GET /api/todos
 app.get('/api/todos', (req, res) => {
