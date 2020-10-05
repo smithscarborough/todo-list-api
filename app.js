@@ -1,8 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const es6Renderer = require('express-es6-template-engine');
+const methodOverride = require('method-override')
 
 const app = express();
+app.use(methodOverride('_method'))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -82,6 +84,27 @@ app.post('/todos', (req, res) => {
       head: 'partials/head'
     }
   })
+})
+
+app.delete('/todos/:id', (req, res) => {
+  const { id } = req.params;
+
+  const todoIndex = todoList.findIndex(element => {
+    if (element.id == id) {
+      return true;
+    }
+    return false;
+  })
+
+  if (todoIndex === -1) {
+    // send a 404 status
+    res.status(404).send('Todo not found');
+  } else {
+    // otherwise, delete the object at the index found
+    todoList.splice(todoIndex, 1);
+    // send a 204 (no content) response
+    res.status(204).redirect('/todos');
+  }
 })
 
 // GET /api/todos

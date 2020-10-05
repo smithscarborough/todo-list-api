@@ -7,7 +7,14 @@
   <h1>My Todos</h1>
   <ul>
     ${todos.map(todo => {
-      return `<li><a href="/todos/${todo.id}">${todo.todo}</a></li>`
+      return `
+      <li>
+        <a href="/todos/${todo.id}">${todo.todo}</a>
+        <form action="/todos/${todo.id}?_method=DELETE" method="POST">
+          <button type="submit">X</button>
+        </form>
+      </li>
+      `
     }).join('')}
   </ul>
 
