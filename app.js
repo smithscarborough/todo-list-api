@@ -10,7 +10,7 @@ app.use(express.static('./public'));
 let todoList = [
   {
     id: 1,
-    todo: 'Implement a REST API',
+    description: 'Implement a REST API',
   },
 ];
 
@@ -31,7 +31,7 @@ app.get('/api/todos/:id', (req, res) => {
 
 // POST /api/todos
 app.post('/api/todos', (req, res) => {
-  if (!req.body || !req.body.todo) {
+  if (!req.body || !req.body.description) {
     res.status(400).json({
       error: 'Provide todo text',
     });
@@ -42,7 +42,7 @@ app.post('/api/todos', (req, res) => {
   }, 0);
   const newTodo = {
     id: prevId + 1,
-    todo: req.body.todo,
+    description: req.body.description,
   };
   todoList.push(newTodo);
   res.json(newTodo);
@@ -50,7 +50,7 @@ app.post('/api/todos', (req, res) => {
 
 // PUT /api/todos/:id
 app.put('/api/todos/:id', (req, res) => {
-  if (!req.body || !req.body.todo) {
+  if (!req.body || !req.body.description) {
     res.status(400).json({
       error: 'Provide todo text',
     });
@@ -59,7 +59,7 @@ app.put('/api/todos/:id', (req, res) => {
   let updatedTodo = {};
   todoList.forEach((todo) => {
     if (todo.id === Number.parseInt(req.params.id)) {
-      todo.todo = req.body.todo;
+      todo.description = req.body.description;
       updatedTodo = todo;
     }
   });
