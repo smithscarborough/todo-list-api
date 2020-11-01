@@ -10,19 +10,19 @@ app.use(express.static('./public'));
 const todoList = [
   {
     id: 1,
-    todo: 'Implement a REST API',
+    description: 'Implement a REST API',
   },
   {
     id: 2,
-    todo: 'Build a frontend',
+    description: 'Build a frontend',
   },
   {
     id: 3,
-    todo: '???',
+    description: '???',
   },
   {
     id: 4,
-    todo: 'Profit!',
+    description: 'Profit!',
   },
 ];
 
