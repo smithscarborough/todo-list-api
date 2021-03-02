@@ -7,16 +7,18 @@
     <title>Todo List App</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous"></script>
     <script src="./script.js" defer></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-    <h1>Todos!</h1>
+    <h1>To Do List!</h1>
     <ul id="todosContainer">
         <!-- Todos will go here -->
     </ul>
     <form id="todosForm">
         <label for="description">New Todo</label><br>
-        <input type="text" name="description" id="description" required>
+        <input type="text" name="description" placeholder="Enter to-do here.." id="description" required>
         <button type="submit">Add</button>
     </form>
 </body>

@@ -7,7 +7,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-//tell it to put all of our static files in teh public folder:
+//tell it to put all of our static files in the public folder:
 app.use(express.static('./public'));
 
 // this is our temporary database (like the 'friends' file in our previous exercise): 
@@ -15,18 +15,22 @@ const todoList = [
   {
     id: 1,
     description: 'Implement a REST API',
+    completed: false,
   },
   {
     id: 2,
     description: 'Build a frontend',
+    completed: false,
   },
   {
     id: 3,
     description: '???',
+    completed: false,
   },
   {
     id: 4,
     description: 'Profit!',
+    completed: false,
   },
 ];
 
@@ -59,13 +63,14 @@ app.get('/api/todos/:id', (req, res) => {
   }
 })
 
-// POST /api/todos
+// POST /api/todos (this creates a new to-do)
 app.post('/api/todos', (req, res) => {
   if (req.body.description) {
     console.log(req.body.description);
     const newTodo = {
       id: nextId++,
-      description: req.body.description
+      description: req.body.description,
+      completed: false
     }
     todoList.push(newTodo);
     res.status(201);
@@ -80,13 +85,25 @@ app.post('/api/todos', (req, res) => {
 // PUT /api/todos/:id
 app.patch('/api/todos/:id', (req, res) => {
   // if req.body ontains a description:
-  if (req.body.description || req.body.description.length === '') {
+  if (req.body.description || req.body.description === '' || req.body.completed) {
     // get ID from route
     const id = Number(req.params.id);
     // find where the todo exists in the todoList array:
     const todoIndex = todoList.findIndex((currTodo) => currTodo.id === id)
-    // update the object inside fo the todoList array:
-    todoList[todoIndex].description = req.body.description
+    // update the object inside fo the todoList array
+    // if there is a description on the request body:
+    if (req.body.description) {
+      // set it on the todo item
+      todoList[todoIndex].description = req.body.description
+    }
+    // conditional to determine whether the data, which is in JSON, is true or false
+    // if the completed status is true or 'true':
+    if (req.body.completed === 'true' || req.body.completed === true) {
+      todoList[todoIndex].completed = true
+      // else if it is false or 'false'
+    } else if (todoList[todoIndex].completed === 'false' || req.body.completed === false) {
+      todoList[todoIndex].completed = false
+    }
     // send back the updated todo item:
     res.json(todoList[todoIndex])
   } else {
